@@ -1,0 +1,38 @@
+openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -sha256 -days 365 -nodes >> create self sign cert
+
+CURL SPAM
+for i in {1..35}; do
+   kubectl exec --namespace=kube-public curl -- sh -c 'test=`wget -qO- -T 2  http://webapp-service.default.svc.cluster.local:8080/info 2>&1` && echo "$test OK" || echo "Failed"';
+   echo ""
+done
+
+sudo lsof -i:80 - find what process listening on port
+ab -kc 10 -t 100000 http://10.155.231.67/google - stress test
+
+Bind to non local address
+nano /etc/sysctl.conf
+# allow processes to bind to the non-local address
+net.ipv4.ip_nonlocal_bind = 1
+sysctl -p /etc/sysctl.conf
+
+
+############################
+YUM
+yum updateinfo list security all (list required security updates that need applying)
+yum info-sec (provide more information of security updates)
+yum update --security (this will update security for all packages on your system so only run if this is what you want to do)
+yum clean all
+yum repolist all | grep nginx
+sudo yum list available | grep nginx-plus
+cat /etc/yum.repos.d/nginx-plus-7.4.repo
+yum-config-manager --enable nginx-plus
+Can ask for /etc/yum.conf
+# check the available versions:
+yum --showduplicates list nginx-plus | expand
+
+# install one specific:
+yum install nginx-plus-18-1.el7.ngx
+
+############################
+apt
+apt-cache policy - find list of 
