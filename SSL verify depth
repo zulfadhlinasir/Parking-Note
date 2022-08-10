@@ -1,0 +1,14 @@
+
+
+	• "ssl_verify_depth" allow the verification of certificates in the certificates chain are checked
+		1. certificate file contains chain of certificates inside.
+		2. A depth of 2 means that certificates signed by a (single level of) intermediate CA are accepted i.e. by an intermediate CA, whose CA certificate is signed by a CA directly known to the server.
+	•   now, lets suppose we have the client accessing an application using certificate K at level 3, from the above diagram
+	•   with "ssl_verify_depth" set to 2, certificate verification can drop a level to intermediate certificate name A and we would expect "│INTERMEDIATE  CA" to be known by Nginx
+	•  in short, ssl_verify_depth sets the limit up to which level/depth certificates in a chain are used during the verification procedure.
+	•  if we increase, the depth, it would allow cert authentication to succeed but it would also allow access to application by other clients with other certificate, 
+		1. for example, if we have had "ssl_verify_depth" set to one and want to limit clients with certificate "cert name K" or "cert name z"
+		2. if we now increase "ssl_verify_depth" to 2, then this action would allow clients with certificate "cert name B" to have access to Application
+		3. this is because as we increase verify depth, we also increase the surface area of the CA and ultimately if we go all the way to root CA, then we would end up allowing all clients with certificate that has a chain link to the ROOT CA. 
+
+In conclusion, certificate chain too long is an error that implies that the certificate chain length is greater than the supplied/specified maximum depth. If we decide to increase it, please consider the unintended consequence of allowing clients with differing cert accessing the application. On the other hand, you could also consider why differing clients have different level of certificate verification depth. I suppose this could be a due to certificate used by clients as issued at different time. In the end, with certificate chain length that exceeds specified maximum depth, there is very little we can do on the Nginx other than to increase "ssl_verify_depth" or issue a new certificate to clients with the correct level of chain depth or turn off "ssl_verify_client" as you did . Please let me know if you need further details. 
